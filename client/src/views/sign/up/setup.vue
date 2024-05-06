@@ -41,7 +41,6 @@ export default {
       try {
         const response = await api().get("/company/companyget", this.company);
         // this.company = response.data.data;
-        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", this.company);
       } catch (error) {
         console.error("Error fetching company information:", error);
       }

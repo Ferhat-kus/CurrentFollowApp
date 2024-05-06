@@ -121,8 +121,6 @@ module.exports = class Auth extends generalModel {
         `
       );
       console.log("SQL", BringState);
-      console.log("aaaaaaaaaaa", companyType);
-      // Güncelleme başarılı mesajı gönder
       return this.responseWith(res, this.successCode, {
         name: name,
         addres: addres,

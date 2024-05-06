@@ -103,18 +103,7 @@ export default {
       bills: [],
     };
   },
-  created() {
-    this.getBills();
-  },
   methods: {
-    async getBills() {
-      try {
-        const response = await api().get("/bills");
-        this.bills = response.data;
-      } catch (error) {
-        console.error(error);
-      }
-    },
     openModal(action) {
       if (action === "add") {
         this.modalTitle = "Fatura Ekle";

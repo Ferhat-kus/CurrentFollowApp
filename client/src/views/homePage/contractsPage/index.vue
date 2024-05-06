@@ -76,18 +76,7 @@ export default {
       reviewButton: "",
     };
   },
-  created() {
-    this.getContract();
-  },
   methods: {
-    async getContract() {
-      try {
-        const response = await api().get("/contracts");
-        this.contract = response.data;
-      } catch (error) {
-        console.error(error);
-      }
-    },
     openModal(action) {
       if (action === "add") {
         this.modalTitle = "Sözleşme Ekle";

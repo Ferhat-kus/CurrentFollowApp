@@ -97,7 +97,7 @@ export default {
         email: "",
         taxAddres: "",
         taxNo: "",
-        companyType: "0",
+        companyType: "",
         // balance: "",
       },
     };

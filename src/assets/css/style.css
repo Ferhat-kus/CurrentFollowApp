@@ -1,0 +1,50 @@
+.scroltype::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroltype::-webkit-scrollbar-thumb {
+  background: #182451;
+  border-radius: 10px;
+}
+
+.scroltypey::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scroltypey::-webkit-scrollbar-thumb {
+  background: #182451;
+  border-radius: 10px;
+}
+.multiselect__tag {
+  white-space: normal !important;
+}
+
+.multiselect__tags {
+  @apply w-full border bordercol rounded outline-none pl-3;
+}
+
+.multiselect__content-wrapper::-webkit-scrollbar,
+.scroltype::-webkit-scrollbar {
+  width: 6px;
+}
+
+.multiselect__content-wrapper::-webkit-scrollbar-thumb,
+.scroltype::-webkit-scrollbar-thumb {
+  background: #182451;
+  border-radius: 10px;
+}
+
+.multiselect__content-wrapper::-webkit-scrollbar,
+.scroltypey::-webkit-scrollbar {
+  height: 14px;
+}
+
+.multiselect__content-wrapper::-webkit-scrollbar-thumb,
+.scroltypey::-webkit-scrollbar-thumb {
+  background: #182451;
+  border-radius: 10px;
+}
+
+.multiselect__option {
+  white-space: normal !important;
+}

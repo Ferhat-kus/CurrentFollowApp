@@ -40,7 +40,6 @@ export default {
     async getCompany() {
       try {
         const response = await api().get("/company/companyget", this.company);
-        // this.company = response.data.data;
       } catch (error) {
         console.error("Error fetching company information:", error);
       }

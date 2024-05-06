@@ -96,8 +96,6 @@ module.exports = class Auth extends generalModel {
         },
         process.env.JWT_SECRET_KEY
       );
-
-      // İşlem başarılı ise başarılı yanıtı gönder
       return this.responseWith(res, this.successCode, {
         token: token,
         fullname: fullname,

@@ -1,8 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-// import signupPage from "../views/sign/up/index.vue";
-import signupPage from "../views/sign/up/index.vue";
-
 import store from "../store";
 
 Vue.use(VueRouter);
@@ -11,7 +8,7 @@ const routes = [
   {
     path: "/index",
     name: "index",
-    component: () => import("../views/index.vue"), 
+    component: () => import("../views/index.vue"),
     meta: {
       requiresAuth: false,
     },
@@ -19,7 +16,7 @@ const routes = [
   {
     path: "/",
     name: "SignUp",
-    component: signupPage,
+    component: () => import("../views/sign/up/index.vue"),
     meta: {
       requiresAuth: false,
     },
@@ -87,18 +84,37 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
-router.beforeEach((to, from, next) => {
-  const isLoggedIn = !!store.state.userToken && !!store.state.myCompanyToken;
-  
-  if (to.meta.requiresAuth === false && isLoggedIn) {
-    store.dispatch("clearAuth");
-    return next({ name: "SignIn" });
-  }
-  if (to.meta.requiresAuth && !isLoggedIn) {
-    return next({ name: "SignIn" });
-  }
-  next();
-});
 
+router.beforeEach((to, from, next) => {
+  // const localStorageUserToken = localStorage.getItem("userToken");
+  // const localStorageCompanyToken = localStorage.getItem("companyToken");
+  // const localStorageAuthorityId = localStorage.getItem("authorityId");
+  // console.log("localStorageUserToken",localStorageUserToken);
+  // console.log("localStorageCompanyToken",localStorageCompanyToken);
+  // console.log("localStorageAuthorityId",localStorageAuthorityId);
+  // if (
+  //   !!localStorageUserToken &&
+  //   !!localStorageCompanyToken &&
+  //   !!localStorageAuthorityId
+  // ) {
+  //   console.log("aaaaaaaaaaaaaaaaaaaa")
+  //   router.push({
+  //     path: "/setup",
+  //     name: "Setuppage",
+  //   });
+  //   return;
+  // } else {
+    const isLoggedIn = !!store.state.userToken && !!store.state.myCompanyToken;
+
+    if (to.meta.requiresAuth === false && isLoggedIn) {
+      store.dispatch("clearAuth");
+      return next({ name: "SignIn" });
+    }
+    if (to.meta.requiresAuth && !isLoggedIn) {
+      return next({ name: "SignIn" });
+    }
+    next();
+  // }
+});
 
 export default router;

@@ -38,6 +38,7 @@
 <script>
 import Form from "./components/signInForm.vue";
 import { api } from "@/plugins/axiosInstance";
+import router from '@/router';
 export default {
   name: "SignUp",
   components: {
@@ -50,6 +51,29 @@ export default {
         password: "",
       },
     };
+  },
+  mounted() {
+    const localStorageUserToken = localStorage.getItem("userToken");
+    const localStorageCompanyToken = localStorage.getItem("companyToken");
+    const localStorageAuthorityId = localStorage.getItem("authorityId");
+    console.log("localStorageUserToken", localStorageUserToken);
+    console.log("localStorageCompanyToken", localStorageCompanyToken);
+    console.log("localStorageAuthorityId", localStorageAuthorityId);
+    if (
+      !!localStorageUserToken &&
+      !!localStorageCompanyToken &&
+      !!localStorageAuthorityId
+    ) {
+      this.$store.commit("setUserToken",localStorageUserToken )
+      this.$store.commit("setMyCompany",localStorageCompanyToken)
+      this.$store.commit("setAuthorityId",localStorageAuthorityId)
+      router.push({
+        path: "/setup",
+        name: "Setuppage",
+      });
+    }else {
+      console.log("LOKAL STORE BOŞ ABİ");
+    }
   },
   methods: {
     async signIn() {

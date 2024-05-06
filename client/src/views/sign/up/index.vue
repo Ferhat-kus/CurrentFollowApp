@@ -67,6 +67,29 @@ export default {
       },
     };
   },
+  mounted() {
+    const localStorageUserToken = localStorage.getItem("userToken");
+    const localStorageCompanyToken = localStorage.getItem("companyToken");
+    const localStorageAuthorityId = localStorage.getItem("authorityId");
+    console.log("localStorageUserToken", localStorageUserToken);
+    console.log("localStorageCompanyToken", localStorageCompanyToken);
+    console.log("localStorageAuthorityId", localStorageAuthorityId);
+    if (
+      !!localStorageUserToken &&
+      !!localStorageCompanyToken &&
+      !!localStorageAuthorityId
+    ) {
+      this.$store.commit("setUserToken",localStorageUserToken )
+      this.$store.commit("setMyCompany",localStorageCompanyToken)
+      this.$store.commit("setAuthorityId",localStorageAuthorityId)
+      router.push({
+        path: "/setup",
+        name: "Setuppage",
+      });
+    }else {
+      console.log("LOKAL STORE BOŞ ABİ");
+    }
+  },
   methods: {
     async createUser() {
       try {
@@ -76,20 +99,28 @@ export default {
         if (userToken) {
           this.$store.commit("setUserToken", userToken);
           this.$store.commit("setAuthorityId", authority);
-          try {
-            const companyResponse = await api().post("/company/add",this.company);
-            const companyToken = companyResponse.data.data.token;
-            this.$store.commit("setMyCompany", companyToken);
-            if (companyToken) {
-              router.push({
-                path: "/setup",
-                name: "Setuppage",
-              });
-            } else {
-              console.log("RESPONSTA HATA VAR ");
-            }
-          } catch (error) {
-            console.log("firma oluşturma isteği atılmadı  ");
+          const companyResponse = await api().post(
+            "/company/add",
+            this.company
+          );
+          const companyToken = companyResponse.data.data.token;
+          this.$store.commit("setMyCompany", companyToken);
+          if (companyToken) {
+            localStorage.setItem("userToken", userToken);
+            localStorage.setItem("companyToken", companyToken);
+            localStorage.setItem("authorityId", authority);
+            console.log(
+              "localStorageUserToken",
+              localStorage.getItem("userToken"),
+              "localStorageCompanyToken",
+              localStorage.getItem("companyToken")
+            );
+            router.push({
+              path: "/setup",
+              name: "Setuppage",
+            });
+          } else {
+            console.log("RESPONSTA HATA VAR ");
           }
         } else {
           console.log("store commit edilmedi");

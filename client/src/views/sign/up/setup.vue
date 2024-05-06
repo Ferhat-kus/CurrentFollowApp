@@ -14,8 +14,6 @@
 import Button from "@/components/customButton/customButton.vue";
 import Form from "@/components/form.vue";
 import { api } from "@/plugins/axiosInstance.js";
-import store from "@/store";
-
 export default {
   components: {
     Button,
@@ -31,17 +29,22 @@ export default {
         taxAddres: "",
         taxNo: "",
       },
+      storageToken: localStorage.getItem('userToken'),
     };
   },
   mounted() {
-    this.getCompany();
+    if (this.storageToken) {
+      this.getCompany();
+    } else {
+      this.$router.push({ path: '/' });
+    }
   },
   methods: {
     async getCompany() {
       try {
         const response = await api().get("/company/companyget", this.company);
       } catch (error) {
-        console.error("Error fetching company information:", error);
+        console.log(error);
       }
     },
     async updateCompany() {

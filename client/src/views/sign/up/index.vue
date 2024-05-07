@@ -25,7 +25,7 @@
         src="../../../assets/logo-dark 1.png"
       />
       <h3 class="text-black mt-0 mx-0 mb-2 font-bold text-base">
-        Lütfen Lütfen Kayıt Olmak İçin Bilgilerinizi Giriniz
+        Lütfen Kayıt Olmak İçin Bilgilerinizi Giriniz
       </h3>
       <div class="w-full">
         <Form to="#" :user="user" @submit="createUser" />
@@ -79,51 +79,67 @@ export default {
       !!localStorageCompanyToken &&
       !!localStorageAuthorityId
     ) {
-      this.$store.commit("setUserToken",localStorageUserToken )
-      this.$store.commit("setMyCompany",localStorageCompanyToken)
-      this.$store.commit("setAuthorityId",localStorageAuthorityId)
+      this.$store.commit("setUserToken", localStorageUserToken);
+      this.$store.commit("setMyCompany", localStorageCompanyToken);
+      this.$store.commit("setAuthorityId", localStorageAuthorityId);
       router.push({
         path: "/setup",
         name: "Setuppage",
       });
-    }else {
+    } else {
       console.log("LOKAL STORE BOŞ ABİ");
     }
   },
   methods: {
     async createUser() {
       try {
-        const response = await api().post("/auth/sign/up", this.user);
-        const userToken = response.data.data.token;
-        const authority = response.data.data.authorityId;
-        if (userToken) {
-          this.$store.commit("setUserToken", userToken);
-          this.$store.commit("setAuthorityId", authority);
-          const companyResponse = await api().post(
-            "/company/add",
-            this.company
-          );
-          const companyToken = companyResponse.data.data.token;
-          this.$store.commit("setMyCompany", companyToken);
-          if (companyToken) {
-            localStorage.setItem("userToken", userToken);
-            localStorage.setItem("companyToken", companyToken);
-            localStorage.setItem("authorityId", authority);
-            console.log(
-              "localStorageUserToken",
-              localStorage.getItem("userToken"),
-              "localStorageCompanyToken",
-              localStorage.getItem("companyToken")
+        if (
+          !this.user.fullname ||
+          !this.user.username ||
+          !this.user.email ||
+          !this.user.phoneNo ||
+          !this.user.mission ||
+          !this.user.password
+          // !this.user.authorityId
+        ) {
+          const response = await api().post("/auth/sign/up", this.user);
+          const userToken = response.data.data.token;
+          const authority = response.data.data.authorityId;
+          if (userToken) {
+            this.$store.commit("setUserToken", userToken);
+            this.$store.commit("setAuthorityId", authority);
+            const companyResponse = await api().post(
+              "/company/add",
+              this.company
             );
-            router.push({
-              path: "/setup",
-              name: "Setuppage",
-            });
+            const companyToken = companyResponse.data.data.token;
+            this.$store.commit("setMyCompany", companyToken);
+            if (companyToken) {
+              localStorage.setItem("userToken", userToken);
+              localStorage.setItem("companyToken", companyToken);
+              localStorage.setItem("authorityId", authority);
+              console.log(
+                "localStorageUserToken",
+                localStorage.getItem("userToken"),
+                "localStorageCompanyToken",
+                localStorage.getItem("companyToken")
+              );
+              router.push({
+                path: "/setup",
+                name: "Setuppage",
+              });
+            } else {
+              console.log("RESPONSTA HATA VAR ");
+            }
           } else {
-            console.log("RESPONSTA HATA VAR ");
+            console.log("store commit edilmedi");
           }
         } else {
-          console.log("store commit edilmedi");
+          this.$swal({
+            icon: "error",
+            title: "Bi sorun oluştu",
+            text: "Lütfen tüm alanları doldurun !",
+          });
         }
       } catch (error) {
         this.$swal({

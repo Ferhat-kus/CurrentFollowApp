@@ -60,7 +60,7 @@ import Input from "@/components/input.vue";
 import Dropdown from "@/components/dropdown.vue";
 
 export default {
-  props: ["user","to"],
+  props: ["user", "to"],
   components: {
     Input,
     Button,
@@ -73,36 +73,7 @@ export default {
   },
   methods: {
     submit() {
-      // const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      // Formdaki input alanlarını kontrol et
-      if (
-        !this.user.fullname ||
-        !this.user.username ||
-        !this.user.email ||
-        !this.user.phoneNo ||
-        !this.user.mission ||
-        !this.user.password
-        // !this.user.authorityId
-      ) {
-        // Eğer bir alan boşsa uyarı göster
-        this.$swal({
-          icon: "error",
-          title: "Bi sorun oluştu",
-          text: "Lütfen tüm alanları doldurun !",
-        });
-      } else
-      //  if ((this.isValidEmail = regex.test(this.user.email)))
-        {
-        this.$emit("submit", this.user);
-      }
-      // else{
-      //   this.$swal({
-      //     icon: "error",
-      //     title: "Bi sorun oluştu",
-      //     text: "Lütfen mail'inizi doğru yazınız!",
-      //   });
-      // }
+      this.$emit("submit", this.user);
     },
     updateUserAuthority(selectedAuthority, id) {
       this.user.authorityId = id;

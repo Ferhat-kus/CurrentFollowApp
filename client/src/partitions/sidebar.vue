@@ -132,7 +132,6 @@ export default {
   },
 };
 </script>
-
 <style>
 .main-width {
   width: calc(100vw - 300px);

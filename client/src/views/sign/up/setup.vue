@@ -3,9 +3,11 @@
     <div
       class="flex justify-center items-center bg-slate-200 opacity-40 fixed inset-0 z-40"
     ></div>
-
+    <h3 class="text-black mt-0 mx-0 mb-2 font-bold text-base">
+      Lütfen Kayıtdınızı Tamamlamak İçin Kurulumu Bitirin.
+    </h3>
     <div class="relative z-50">
-      <Form @submit="updateCompany" :myCompany="company" to="#"  />
+      <Form @submit="updateCompany" :myCompany="company" to="#" />
     </div>
   </div>
 </template>
@@ -29,14 +31,14 @@ export default {
         taxAddres: "",
         taxNo: "",
       },
-      storageToken: localStorage.getItem('userToken'),
+      storageToken: localStorage.getItem("userToken"),
     };
   },
   mounted() {
     if (this.storageToken) {
       this.getCompany();
     } else {
-      this.$router.push({ path: '/' });
+      this.$router.push({ path: "/" });
     }
   },
   methods: {
@@ -49,21 +51,36 @@ export default {
     },
     async updateCompany() {
       try {
-        const response = await api().post("/company/companyBring",{
-          name: this.company.name,
-          addres: this.company.addres,
-          phoneNo: this.company.phoneNo,
-          email: this.company.email,
-          taxAddres: this.company.taxAddres,
-          taxNo: this.company.taxNo,
-          companyType: "1",
-        });
-        this.$router.push({path: '/companies'})
-        console.log("SetupPAgeCompanyresponse", response.data.data);
+        if (
+          !this.company.name == "" ||
+          !this.company.addres == "" ||
+          !this.company.phoneNo == "" ||
+          !this.company.email == "" ||
+          !this.company.taxAddres == "" ||
+          !this.company.taxNo == ""
+        ) {
+          const response = await api().post("/company/companyBring", {
+            name: this.company.name,
+            addres: this.company.addres,
+            phoneNo: this.company.phoneNo,
+            email: this.company.email,
+            taxAddres: this.company.taxAddres,
+            taxNo: this.company.taxNo,
+            companyType: "1",
+          });
+          this.$router.push({ path: "/companies" });
+          console.log("SetupPAgeCompanyresponse", response.data.data);
+        } else {
+          this.$swal({
+            icon: "error",
+            title: "Bi sorun oluştu",
+            text: "Lütfen tüm alanları doldurun !",
+          });
+        }
       } catch (error) {
-        console.log("Catch Hatası" , error);
+        console.log("Catch Hatası", error);
       }
-    }
+    },
   },
 };
 </script>

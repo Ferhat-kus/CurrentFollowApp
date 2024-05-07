@@ -71,9 +71,6 @@ export default {
     const localStorageUserToken = localStorage.getItem("userToken");
     const localStorageCompanyToken = localStorage.getItem("companyToken");
     const localStorageAuthorityId = localStorage.getItem("authorityId");
-    console.log("localStorageUserToken", localStorageUserToken);
-    console.log("localStorageCompanyToken", localStorageCompanyToken);
-    console.log("localStorageAuthorityId", localStorageAuthorityId);
     if (
       !!localStorageUserToken &&
       !!localStorageCompanyToken &&
@@ -87,20 +84,19 @@ export default {
         name: "Setuppage",
       });
     } else {
-      console.log("LOKAL STORE BOŞ ABİ");
+      console.log("SignUpPage");
     }
   },
   methods: {
     async createUser() {
       try {
         if (
-          !this.user.fullname ||
-          !this.user.username ||
-          !this.user.email ||
-          !this.user.phoneNo ||
-          !this.user.mission ||
-          !this.user.password
-          // !this.user.authorityId
+          !this.user.fullname == "" ||
+          !this.user.username == "" ||
+          !this.user.email == "" ||
+          !this.user.phoneNo == "" ||
+          !this.user.mission == "" ||
+          !this.user.password == ""
         ) {
           const response = await api().post("/auth/sign/up", this.user);
           const userToken = response.data.data.token;

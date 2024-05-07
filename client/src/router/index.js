@@ -86,35 +86,30 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  // const localStorageUserToken = localStorage.getItem("userToken");
-  // const localStorageCompanyToken = localStorage.getItem("companyToken");
-  // const localStorageAuthorityId = localStorage.getItem("authorityId");
-  // console.log("localStorageUserToken",localStorageUserToken);
-  // console.log("localStorageCompanyToken",localStorageCompanyToken);
-  // console.log("localStorageAuthorityId",localStorageAuthorityId);
-  // if (
-  //   !!localStorageUserToken &&
-  //   !!localStorageCompanyToken &&
-  //   !!localStorageAuthorityId
-  // ) {
-  //   console.log("aaaaaaaaaaaaaaaaaaaa")
-  //   router.push({
-  //     path: "/setup",
-  //     name: "Setuppage",
-  //   });
-  //   return;
-  // } else {
-    const isLoggedIn = !!store.state.userToken && !!store.state.myCompanyToken;
-
-    if (to.meta.requiresAuth === false && isLoggedIn) {
-      store.dispatch("clearAuth");
-      return next({ name: "SignIn" });
-    }
-    if (to.meta.requiresAuth && !isLoggedIn) {
-      return next({ name: "SignIn" });
-    }
-    next();
-  // }
+  const isLoggedIn = !!store.state.userToken && !!store.state.myCompanyToken;
+  const localStorageUserToken = localStorage.getItem("userToken");
+  const localStorageCompanyToken = localStorage.getItem("companyToken");
+  const localStorageAuthorityId = localStorage.getItem("authorityId");
+  if (
+    !!localStorageUserToken &&
+    !!localStorageCompanyToken &&
+    !!localStorageAuthorityId &&
+    !isLoggedIn &&
+    to.meta.requiresAuth === false
+  ) {
+    console.log("İF İÇİNDE");
+  } else {
+    console.log("ELSE İÇİNDE");
+    return next();
+  }
+  if (to.meta.requiresAuth === false && isLoggedIn) {
+    store.dispatch("clearAuth");
+    return next({ name: "SignIn" });
+  }
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    return next({ name: "SignIn" });
+  }
+  next();
 });
 
 export default router;

@@ -78,6 +78,11 @@ export default {
           });
         }
       } catch (error) {
+        this.$swal({
+          icon: "error",
+          title: "Bi sorun oluştu",
+          text: "Lütfen Firma Bilgilerinii Doğru Giriniz",
+        });
         console.log("Catch Hatası", error);
       }
     },

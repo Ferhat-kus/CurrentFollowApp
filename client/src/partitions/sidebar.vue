@@ -12,12 +12,25 @@
       class="h-[50px] bg-darkBlue flex items-center justify-between text-white px-2 overflow-hidden"
     >
       <div class="flex w-full items-center">
-        <div class="w-1/3 flex items-center justify-center" v-if="isShow">
+        <!-- REVİZE ET -->
+        <div
+          :class="isShow ? 'w-1/3' : 'w-3/3 p-1'"
+          class="flex items-center justify-center"
+        >
+          <img
+            src="@/assets/bluelogo.png"
+            :class="isShow ? 'w-8' : ''"
+            class="w-8 bg-darkBlue"
+          />
+        </div>
+
+        <!-- <div class="w-1/3 flex items-center justify-center" v-if="isShow">
           <img src="@/assets/bluelogo.png" class="w-8 bg-darkBlue" />
         </div>
         <div class="w-3/3 p-1 flex items-center justify-center" v-if="!isShow">
           <img src="@/assets/bluelogo.png" class="bg-darkBlue" />
-        </div>
+        </div> -->
+        <!-- REVİZE ET -->
         <div class="w-2/3 font-bold overflow-hidden truncate" v-if="isShow">
           Sirius Tedarik
         </div>
@@ -40,14 +53,14 @@
         <router-link
           v-for="(route, index) in routes"
           :key="index"
-          :to="route.path"  
+          :to="route.path"
         >
           <div
             v-if="isShow"
             :class="{ 'bg-white text-lightBlue': $route.path === route.path }"
             class="flex w-full items-center hover:bg-white hover:text-lightBlue px-2 py-2 my-2 cursor-pointer"
           >
-            <div class="md:w-1/3 w-1/6  flex items-center justify-center">
+            <div class="md:w-1/3 w-1/6 flex items-center justify-center">
               <i :class="route.icon"></i>
             </div>
             <div class="md:w-2/3 w-2/6 font-semibold">{{ route.label }}</div>
@@ -64,32 +77,31 @@
         </router-link>
       </div>
       <!-- exit -->
-      <div>
-        <router-link to="/signin">
-          <div
-            v-if="isShow"
-            class="flex w-full items-center bg-white text-lightBlue px-2 py-2 my-2 cursor-pointer"
-          >
-          <div class="md:w-1/3 w-1/6  flex items-center justify-center">
-              <i class="bx bx-log-out text-2xl"></i>
-            </div>
-            <div class="md:w-2/3 w-2/6 font-semibold">Çıkış Yap</div>
+      <div @click="logout">
+        <div
+          v-if="isShow"
+          class="flex w-full items-center bg-white text-lightBlue px-2 py-2 my-2 cursor-pointer"
+        >
+          <div class="md:w-1/3 w-1/6 flex items-center justify-center">
+            <i class="bx bx-log-out text-2xl"></i>
           </div>
-          <div
-            v-else
-            class="flex w-full items-center bg-white text-lightBlue py-2 my-2 cursor-pointer"
-          >
-            <div class="w-full flex items-center justify-center">
-              <i class="bx bx-log-out text-2xl"></i>
-            </div>
+          <div class="md:w-2/3 w-2/6 font-semibold">Çıkış Yap</div>
+        </div>
+        <div
+          v-else
+          class="flex w-full items-center bg-white text-lightBlue py-2 my-2 cursor-pointer"
+        >
+          <div class="w-full flex items-center justify-center">
+            <i class="bx bx-log-out text-2xl"></i>
           </div>
-        </router-link>
+        </div>
       </div>
     </div>
   </aside>
 </template>
 
 <script>
+import router from "@/router";
 export default {
   props: {
     isShow: Boolean,
@@ -126,6 +138,12 @@ export default {
     };
   },
   methods: {
+    logout() {
+      localStorage.clear();
+      console.log("LOKAL STORE BOŞ ABİ");
+
+      router.push({ name: "SignIn" });
+    },
     closeSidebar() {
       this.$emit("close-sidebar");
     },

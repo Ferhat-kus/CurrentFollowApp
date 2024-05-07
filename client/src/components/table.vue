@@ -37,7 +37,7 @@
                 <td
                   class="px-6 py-3 max-w-0 text-xs font-semibold text-left text-textColor border-b border-darkBlue overflow-hidden"
                 >
-                  <div class="truncate">
+                  <div >
                     {{ index + 1 }}
                   </div>
                 </td>

@@ -12,21 +12,23 @@ const {
 
 module.exports = class Auth extends generalModel {
   async signIn(req, res) {
-    const { username, password,authorityId,companyId } = req.body;
+    const { username, password, authorityId, companyId, fullname } = req.body;
     try {
       const cacheKey = "user-auth-*" + username + "-information-*";
       await delKeyItem(cacheKey);
       if (username) {
-        const sql = `
-          SELECT id, username, password, authorityId,companyId
+        const sql = `SELECT id, username, password, authorityId, companyId, fullname
           FROM users
-          WHERE username = ?;
-        `;
+          WHERE username = ?;`;
+
         const parameters = [username];
         const userData = await getCacheQuery(sql, parameters, cacheKey);
         if (userData.length > 0) {
           const user = userData[0];
-          const usernameCompare = await this.usernameCompare(username, user.username);
+          const usernameCompare = await this.usernameCompare(
+            username,
+            user.username
+          );
           const compare = await this.passwordCompare(password, user.password);
           console.log("karşilaştırma ", usernameCompare);
           if (compare) {
@@ -34,15 +36,19 @@ module.exports = class Auth extends generalModel {
               {
                 username: user.username,
                 password: user.password,
+                authorityId: user.authorityId,
+                id: user.companyId,
+                fullname: user.fullname,
               },
               process.env.JWT_SECRET_KEY
             );
-            return this.responseWith(res, this.successCode,{
+            return this.responseWith(res, this.successCode, {
               token: token,
               username: user.username,
               password: user.password,
               authorityId: user.authorityId,
-              companyId: user.companyId,
+              id: user.companyId,
+              fullname: user.fullname,
             });
           } else {
             return this.responseWith(res, this.passwordErrorCode);
@@ -58,6 +64,7 @@ module.exports = class Auth extends generalModel {
       return this.responseWith(res, this.serverErrorCode);
     }
   }
+  // -------------------------------------------------
   async signUp(req, res) {
     const {
       fullname,
@@ -66,7 +73,7 @@ module.exports = class Auth extends generalModel {
       username,
       password,
       mission,
-      authorityId
+      authorityId,
     } = req.body;
 
     const companyId = req.body.companyId || 0;
@@ -96,6 +103,7 @@ module.exports = class Auth extends generalModel {
         },
         process.env.JWT_SECRET_KEY
       );
+      console.log("signUp Token ", jwt.decode(token));
       return this.responseWith(res, this.successCode, {
         token: token,
         fullname: fullname,

@@ -35,7 +35,7 @@ module.exports = class Auth extends generalModel {
         {
           id: insertState.insertId,
           email: email,
-        },
+        },  
         process.env.JWT_SECRET_KEY
       );
       return this.responseWith(res, this.successCode, {
@@ -69,14 +69,13 @@ module.exports = class Auth extends generalModel {
           message: "Token geçersiz veya hatalı",
         });
       }
-      const decodeAuthId = decodedAuthToken.id;
+      console.log("IDDDDddd",decodedAuthToken);
       const getUserSql = await QuaryCache(
         `SELECT * FROM companies WHERE id =${getCompanyId.id};
           UPDATE db.users
             SET companyId = '${getCompanyId.id}'
-          WHERE id = '${decodeAuthId}';`
+          WHERE id = '${decodedAuthToken.id}';`
       );
-      console.log("getUserSql", getUserSql);
       return this.responseWith(res, this.successCode, {
           name: getUserSql[0].name,
           addres: getUserSql[0].addres,
@@ -120,7 +119,6 @@ module.exports = class Auth extends generalModel {
         WHERE id = '${decodeId}';
         `
       );
-      console.log("SQL", BringState);
       return this.responseWith(res, this.successCode, {
         name: name,
         addres: addres,

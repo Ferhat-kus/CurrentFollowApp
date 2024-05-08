@@ -69,22 +69,19 @@ export default {
   },
   mounted() {
     const localStorageUserToken = localStorage.getItem("userToken");
-    const localStorageCompanyToken = localStorage.getItem("companyToken");
     const localStorageAuthorityId = localStorage.getItem("authorityId");
     if (
       !!localStorageUserToken &&
-      !!localStorageCompanyToken &&
       !!localStorageAuthorityId
     ) {
       this.$store.commit("setUserToken", localStorageUserToken);
-      this.$store.commit("setMyCompany", localStorageCompanyToken);
       this.$store.commit("setAuthorityId", localStorageAuthorityId);
       router.push({
         path: "/setup",
         name: "Setuppage",
       });
     } else {
-      console.log("SignUpPage");
+      console.log("Giris yapilmamis kardesim tokenin yok");
     }
   },
   methods: {
@@ -112,17 +109,11 @@ export default {
             this.$store.commit("setMyCompany", companyToken);
             if (companyToken) {
               localStorage.setItem("userToken", userToken);
-              localStorage.setItem("companyToken", companyToken);
               localStorage.setItem("authorityId", authority);
-              console.log(
-                "localStorageUserToken",
-                localStorage.getItem("userToken"),
-                "localStorageCompanyToken",
-                localStorage.getItem("companyToken")
-              );
               router.push({
                 path: "/setup",
                 name: "Setuppage",
+                params: { companyToken: companyToken },
               });
             } else {
               console.log("RESPONSTA HATA VAR ");

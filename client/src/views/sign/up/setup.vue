@@ -31,20 +31,39 @@ export default {
         taxAddres: "",
         taxNo: "",
       },
-      storageToken: localStorage.getItem("userToken"),
     };
   },
-  mounted() {
-    if (this.storageToken) {
+  created() {
+    const localStorageUserToken = localStorage.getItem("userToken");
+    const localStorageCompanyToken = localStorage.getItem("companyToken");
+    const localStorageAuthorityId = localStorage.getItem("authorityId");
+    if (
+      !!localStorageUserToken &&
+      !!localStorageCompanyToken &&
+      !!localStorageAuthorityId
+    ) {
+      console.log("aaaaaaa");
+      this.$router.push({ path: "/companies" });
+    } else if (
+      !!localStorageUserToken &&
+      !!localStorageAuthorityId
+    ){
       this.getCompany();
-    } else {
-      this.$router.push({ path: "/" });
+      console.log("Kullanici kayit olmus ama firmasini kaydetmemis abi");
+    }else {
+      console.log("duba yok bi yarram yok ");
+
+      // this.$router.push({ path: "/setup" });
     }
+    
+    
   },
   methods: {
     async getCompany() {
       try {
         const response = await api().get("/company/companyget", this.company);
+        console.log(this.company);
+        console.log(response.data.data);
       } catch (error) {
         console.log(error);
       }
@@ -59,6 +78,7 @@ export default {
           !this.company.taxAddres == "" ||
           !this.company.taxNo == ""
         ) {
+          console.log(1);
           const response = await api().post("/company/companyBring", {
             name: this.company.name,
             addres: this.company.addres,
@@ -68,6 +88,11 @@ export default {
             taxNo: this.company.taxNo,
             companyType: "1",
           });
+          console.log(2);
+          localStorage.setItem("companyToken", this.$route.params.companyToken);
+          console.log(3);
+          this.$store.commit("setMyCompany", this.$route.params.companyToken);
+
           this.$router.push({ path: "/companies" });
           console.log("SetupPAgeCompanyresponse", response.data.data);
         } else {
@@ -78,6 +103,7 @@ export default {
           });
         }
       } catch (error) {
+        localStorage.clear();
         this.$swal({
           icon: "error",
           title: "Bi sorun oluştu",

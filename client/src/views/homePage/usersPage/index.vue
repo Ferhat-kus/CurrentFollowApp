@@ -42,13 +42,14 @@
           'Yetki',
           '',
         ]"
+        @delete-clicked="deleteUser"
         :bodycolumns="filteredUsers"
         @row-clicked="openUserAddModal('detail')"
         @detail-clicked="openUserAddModal('detail')"
       />
       <customModal :header-title="modalTitle" ref="usersAddModal" name="user">
         <template v-slot:form>
-          <userForm />
+          <userForm @save="addUser" :user="user" />
         </template>
       </customModal>
     </div>
@@ -77,6 +78,15 @@ export default {
   },
   data() {
     return {
+      user: {
+        fullname: "",
+        phoneNo: "",
+        email: "",
+        username: "",
+        password: "",
+        authorityId: "1",
+        mission: "",
+      },
       users: [],
       modalTitle: "Kullanıcı Ekle",
       usersFilterShow: false,
@@ -86,10 +96,9 @@ export default {
     this.getUsers();
   },
   computed: {
-  
     filteredUsers() {
       return this.users.map((user) => {
-        const { id ,password, companyId, authorityId, ...filteredUser } = user;
+        const { id, password, companyId, authorityId, ...filteredUser } = user;
         return {
           ...filteredUser,
           authority: this.getAuthorityText(user.authorityId),
@@ -100,18 +109,96 @@ export default {
   methods: {
     async getUsers() {
       try {
-        const response = await api().get("/users/users");
+        const response = await api().get("/users/listing");
         this.users = response.data.data.users;
+        console.log("Response",response.data.data.users)
       } catch (error) {
         console.error(error);
+      }
+    },
+    async addUser() {
+      if (
+        !this.user.name == "" ||
+        !this.user.surname == "" ||
+        !this.user.phoneNo == "" ||
+        !this.user.email == "" ||
+        !this.user.username == "" ||
+        !this.user.password == "" ||
+        !this.user.authorityId == "" ||
+        !this.user.mission == ""
+      ) {
+        const isUnique = this.users.every(
+          (user) =>
+            user.username !== this.user.username &&
+            user.email !== this.user.email
+        );
+        if (!isUnique) {
+          this.$swal({
+            icon: "error",
+            title: "Hata",
+            text: "Kullanıcı adı veya e-posta zaten kullanılıyor.",
+          });
+          return;
+        }
+        try {
+          this.user.fullname = `${this.user.name} ${this.user.surname}`;
+          const response = await api().post("/users/add", this.user);
+          console.log("Eklenen Kullanıcı ", response);
+          this.closeUserAddModal();
+        } catch (error) {
+          console.error(error);
+          this.$swal({
+            icon: "error",
+            title: "Hata",
+            text: "Kullanıcı eklenirken bir hata oluştu.",
+          });
+        }
+      } else {
+        this.$swal({
+          icon: "error",
+          title: "Hata",
+          text: "Lütfen tüm alanları doldurun!",
+        });
+      }
+    },
+    async deleteUser() {
+      const confirmation = await this.$swal({
+        title: "Uyarı",
+        text: "Kullanıcıyı Silmek İstediğinize Eminmisiniz !?",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonText: "İptal",
+        confirmButtonText: "Sil",
+        cancelButtonColor: "#3085d6",
+        confirmButtonColor: "#d33",
+      });
+      if (confirmation.isConfirmed) {
+
+        this.$swal("Başarılı", "Kullanıcı başarıyla silindi", "success");
+      } else {
+        this.$swal(
+          "İptal Edildi",
+          "Kullanıcı silme işlemi iptal edildi",
+          "info"
+        );
       }
     },
     openUserAddModal(action) {
       this.modalTitle =
         action === "add" ? "Kullanıcı Ekle" : "Kullanıcı Detayları";
+      this.user = {
+        fullname: "",
+        phoneNo: "",
+        email: "",
+        username: "",
+        password: "",
+        authorityId: "1",
+        mission: "",
+      };
       this.$refs.usersAddModal.show("user");
     },
     closeUserAddModal() {
+      this.getUsers();
       this.$refs.usersAddModal.hide("user");
     },
     getAuthorityText(authorityId) {

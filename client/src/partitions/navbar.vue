@@ -15,28 +15,63 @@
               "
             ></i>
           </div>
-          <span class="text-md font-semibold text-titleTextColor"
-            >Merhaba Volkan</span
+          <span class="text-md font-semibold capitalize text-titleTextColor"
+            >Merhaba {{ userName }}</span
           >
         </div>
       </div>
     </div>
     <div class="p-2 h-[calc(100vh-50px)]">
-      <slot name="routerView" class="h-full p-1">
-      </slot>
+      <slot name="routerView" class="h-full p-1"> </slot>
     </div>
   </main>
 </template>
 
 <script>
+import { api } from "@/plugins/axiosInstance.js";
+
 export default {
-    props:{
-        isShow:Boolean,
-    },
-    methods:{
-      toggleMenu(){
-        this.$emit('toggleMenu')
+  props: {
+    isShow: Boolean,
+  },
+  data() {
+    return {
+      userName: "",
+    };
+  },
+  created() {
+    this.fetchUserName();
+  },
+  watch: {
+    '$route.path'(newPath, oldPath) {
+      if (newPath === '/companies') {
+        this.fetchUserName();
+      } else {
+        console.log("ssssssssssssssss");
       }
     }
+  },
+  methods: {
+    toggleMenu() {
+      this.$emit("toggleMenu");
+    },
+    async fetchUserName() {
+      if (
+        this.$store.state.userToken !== null &&
+        this.$store.state.myCompanyToken !== null &&
+        this.$store.state.authorityId !== null &&
+        this.$route.path == "/companies"
+      ) {
+        try {
+          const response = await api().get("/users/listing");
+          this.userName = response.data.data.fullname;
+        } catch (error) {
+          console.error("Kullanıcı adı alınamadı:", error);
+        }
+      } else {
+        console.log("Gerekli oturum bilgileri eksik.");
+      }
+    },
+  },
 };
 </script>

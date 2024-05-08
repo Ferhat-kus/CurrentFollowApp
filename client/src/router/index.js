@@ -92,15 +92,17 @@ router.beforeEach((to, from, next) => {
   const localStorageAuthorityId = localStorage.getItem("authorityId");
   if (
     !!localStorageUserToken &&
-    !!localStorageCompanyToken &&
-    !!localStorageAuthorityId &&
-    !isLoggedIn &&
-    to.meta.requiresAuth === false
+    !!localStorageAuthorityId
   ) {
     console.log("İF İÇİNDE");
-  } else {
-    console.log("ELSE İÇİNDE");
+
     return next();
+  } else if(
+    !!localStorageUserToken &&
+    !!localStorageAuthorityId && 
+    !!localStorageCompanyToken
+  ){
+    return next({name: "Companies"});
   }
   if (to.meta.requiresAuth === false && isLoggedIn) {
     store.dispatch("clearAuth");

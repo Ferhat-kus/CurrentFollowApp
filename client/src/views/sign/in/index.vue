@@ -60,9 +60,9 @@ export default {
       !!localStorageCompanyToken &&
       !!localStorageAuthorityId
     ) {
-      console.log("ssssssssssssssss");
+      console.log("LOKAL STORAGE DOLU");
     } else {
-      console.log("SignInPage");
+      // console.log("SignInPage");
     }
   },
   methods: {

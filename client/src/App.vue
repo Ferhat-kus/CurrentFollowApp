@@ -1,7 +1,7 @@
 <template>
   <div class="flex w-screen">
-    <Sidebar :isShow="$store.state.isSidebar" @close-sidebar="closeSidebar" />
-    <Navbar :isShow="$store.state.isSidebar" @toggleMenu="toggleSidebar">
+    <Sidebar  :isShow="$store.state.isSidebar" @close-sidebar="closeSidebar" />
+    <Navbar  :isShow="$store.state.isSidebar" @toggleMenu="toggleSidebar">
       <template v-slot:routerView>
         <router-view />
       </template>

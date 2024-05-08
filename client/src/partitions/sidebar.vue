@@ -138,11 +138,14 @@ export default {
     };
   },
   methods: {
-    logout() {
-      localStorage.clear();
-      console.log("LOKAL STORE BOŞ ABİ");
-
-      router.push({ name: "SignIn" });
+    async logout() {
+      try {
+        localStorage.clear();
+        this.$store.dispatch("clearAuth");
+        router.push({ name: "SignIn" });
+      } catch (error) {
+        console.log("aaaaaaaaaa", !!localStorage.clear());
+      }
     },
     closeSidebar() {
       this.$emit("close-sidebar");

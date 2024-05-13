@@ -15,10 +15,21 @@ Vue.use(VModal, {
 import VueSweetalert2 from "vue-sweetalert2";
 Vue.use(VueSweetalert2);
 import "sweetalert2/dist/sweetalert2.min.css";
+import EventBus from "./plugins/event-bus";
 
-import commonMixins from "./plugins/commonMixins.js";
-Vue.mixin(commonMixins);
-  
+Vue.mixin({
+  methods: {
+    getTargetNumber: function (target) {
+      console.log("a", target);
+      setTimeout(
+        function () {
+          EventBus.$emit("target_achieved", target);
+        }, target
+      );
+    },
+  },
+});
+
 Vue.config.productionTip = false;
 new Vue({
   router,

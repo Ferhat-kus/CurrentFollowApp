@@ -47,7 +47,8 @@ module.exports = class Auth extends generalModel {
               username: user.username,
               password: user.password,
               authorityId: user.authorityId,
-              id: user.companyId,
+              companyId: user.companyId,
+              id: user.id,
               fullname: user.fullname,
             });
           } else {
@@ -100,6 +101,8 @@ module.exports = class Auth extends generalModel {
           phoneNo: phoneNo,
           email: email,
           username: username,
+          authorityId: authorityId,
+          fullname: fullname,
         },
         process.env.JWT_SECRET_KEY
       );

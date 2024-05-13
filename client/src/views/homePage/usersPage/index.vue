@@ -45,7 +45,7 @@
         @delete-clicked="deleteUser"
         :bodycolumns="filteredUsers"
         @row-clicked="openUserAddModal('detail')"
-        @detail-clicked="openUserAddModal('detail')"
+        @detail-clicked="openUserAddModal('detail' , userIndex)"
       />
       <customModal :header-title="modalTitle" ref="usersAddModal" name="user">
         <template v-slot:form>
@@ -111,7 +111,7 @@ export default {
       try {
         const response = await api().get("/users/listing");
         this.users = response.data.data.users;
-        console.log("Response",response.data.data.users)
+        console.log("Response", response.data.data.users[0].id);
       } catch (error) {
         console.error(error);
       }
@@ -161,7 +161,12 @@ export default {
         });
       }
     },
-    async deleteUser() {
+    async updateUser(userIndex){
+      console.log(userIndex);
+      // console.log("Silinen Kullanıcı ID: ", this.users[user[0]].id);
+      // console.log("aaaaaaaaaaaaaaaaa", user);
+    },
+    async deleteUser(user) {
       const confirmation = await this.$swal({
         title: "Uyarı",
         text: "Kullanıcıyı Silmek İstediğinize Eminmisiniz !?",
@@ -173,8 +178,30 @@ export default {
         confirmButtonColor: "#d33",
       });
       if (confirmation.isConfirmed) {
-
-        this.$swal("Başarılı", "Kullanıcı başarıyla silindi", "success");
+        if (
+          this.$store.state.authorityId == "1" ||
+          this.$store.state.authorityId == "2"
+        ) {
+          console.log("WWWWWWWWWWWWWWWWWW", this.$store.state.authorityId);
+          try {
+            console.log("Silinen Kullanıcı ID: ", this.users[user[0]].id);
+            this.getUsers();
+            this.$swal("Başarılı", "Kullanıcı başarıyla silindi", "success");
+          } catch (error) {
+            console.error(error);
+            this.$swal({
+              icon: "error",
+              title: "Hata",
+              text: "Kullanıcı silinirken bir hata oluştu.",
+            });
+          }
+        } else {
+          this.$swal({
+            icon: "error",
+            title: "Hata",
+            text: "Bu Kullanıcıyı Silmek İçin Yetkiniz Yetersiz",
+          });
+        }
       } else {
         this.$swal(
           "İptal Edildi",
@@ -183,18 +210,23 @@ export default {
         );
       }
     },
-    openUserAddModal(action) {
+    openUserAddModal(action, userIndex) {
       this.modalTitle =
         action === "add" ? "Kullanıcı Ekle" : "Kullanıcı Detayları";
-      this.user = {
-        fullname: "",
-        phoneNo: "",
-        email: "",
-        username: "",
-        password: "",
-        authorityId: "1",
-        mission: "",
-      };
+      if (action === "add") {
+        this.user = {
+          fullname: "",
+          phoneNo: "",
+          email: "",
+          username: "",
+          password: "",
+          authorityId: "1",
+          mission: "",
+        };
+      } else {
+        this.updateUser(userIndex);
+        console.log("Detay Modalı" , user);
+      }
       this.$refs.usersAddModal.show("user");
     },
     closeUserAddModal() {

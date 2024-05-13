@@ -8,7 +8,7 @@ const routes = [
   {
     path: "/index",
     name: "index",
-    component: () => import("../views/index.vue"),
+    component: () => import("../views/hello.vue"),
     meta: {
       requiresAuth: false,
     },

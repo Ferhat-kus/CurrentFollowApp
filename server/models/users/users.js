@@ -29,7 +29,7 @@ module.exports = class User extends generalModel {
       }
       // ----------------------------------------------------------------
       const users = await QuaryCache(
-        `SELECT users.*
+        `SELECT users.id,users.*
             FROM companies
             JOIN users ON companies.id = users.companyId
             WHERE companies.id = ${companyDecodeToken.id};`,
@@ -106,6 +106,66 @@ module.exports = class User extends generalModel {
     } catch (error) {
       console.error(error);
       return this.responseWith(res, this.serverErrorCode);
+    }
+  }
+
+  async userEdit(req, res) {
+    const {
+      fullname,
+      phoneNo,
+      email,
+      username,
+      password,
+      authorityId,
+      mission,
+    } = req.body;
+
+    try {
+      const header = req.headers.authorization;
+      const authToken = header && header.split(" ")[1];
+      if (!authToken) return res.sendStatus(401);
+
+      const decodeAuthToken = jwt.decode(authToken);
+      if (!decodeAuthToken) return res.sendStatus(401);
+      console.log("Decode Token",decodeAuthToken);
+      if (
+        decodeAuthToken.authorityId !== "1" &&
+        decodeAuthToken.authorityId !== "2"
+      ) {
+        console.log("Kullanıcının Yetkisi Yok", decodeAuthToken.authorityId);
+        return res.sendStatus(403);
+      }
+
+      const updateUser = await QuaryCache(
+        `
+        UPDATE users
+        SET fullname = ?,
+            username = ?,
+            email = ?,
+            phoneNo = ?,
+            password = ?,
+            mission = ?,
+            authorityId = ?
+        WHERE id = ?;
+      `,
+        [
+          fullname,
+          username,
+          email,
+          phoneNo,
+          password,
+          mission,
+          authorityId,
+          decodeAuthToken.id,
+        ]
+      );
+      console.log(decodeAuthToken.id);
+      console.log("Güncellenen Kullanıcı: ", updateUser);
+
+      res.sendStatus(200);
+    } catch (error) {
+      console.error("Kullanıcı güncellenirken bir hata oluştu:", error);
+      res.sendStatus(500);
     }
   }
 };

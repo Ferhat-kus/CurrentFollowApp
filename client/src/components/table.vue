@@ -37,7 +37,7 @@
                 <td
                   class="px-6 py-3 max-w-0 text-xs font-semibold text-left text-textColor border-b border-darkBlue overflow-hidden"
                 >
-                  <div >
+                  <div>
                     {{ index + 1 }}
                   </div>
                 </td>
@@ -56,10 +56,10 @@
                   class="py-3 md:px-5 px-0 text-xs whitespace-nowrap font-semibold text-left text-textColor border-b border-darkBlue"
                 >
                   <div class="flex items-center justify-evenly">
-                    <div @click="detailClicked">
+                    <div @click="detailClicked([index, ...items])">
                       <img class="w-5" src="@/assets/icons/edit.svg" alt="" />
                     </div>
-                    <div @click="deleteClicked" v-show="show">
+                    <div @click="deleteClicked([index, ...items])">
                       <img class="w-4" src="@/assets/icons/trash.svg" alt="" />
                     </div>
                   </div>
@@ -133,11 +133,11 @@ export default {
     onRowClicked(companyId) {
       this.$emit("row-clicked", companyId);
     },
-    detailClicked(companyId) {
-      this.$emit("detail-clicked", companyId);
+    detailClicked(userIndex) {
+      this.$emit("detail-clicked", userIndex);
     },
-    deleteClicked() {
-      this.$emit("delete-clicked");
+    deleteClicked(items) {
+      this.$emit("delete-clicked", items);
     },
     // Sayfayı değiştirir
     setCurrentPage(pageNumber) {

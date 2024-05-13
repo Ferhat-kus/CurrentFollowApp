@@ -10,5 +10,8 @@ router.get("/listing",authVerify, (req, res) => {
 router.post("/add",authVerify, (req, res) => {
     return new model().userAdd(req, res);
 });
+router.get("/edit",authVerify, (req, res) => {
+    return new model().userEdit(req, res);
+})
 module.exports = router;
     

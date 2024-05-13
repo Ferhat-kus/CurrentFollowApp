@@ -39,38 +39,33 @@ export default {
       userName: "",
     };
   },
-  created() {
+  mounted() {
     this.fetchUserName();
   },
   watch: {
-    '$route.path'(newPath, oldPath) {
-      if (newPath === '/companies') {
+    "$route.path"(newPath, oldPath) {
+      if (newPath !== "/" || newPath !== "/signin") {
         this.fetchUserName();
       } else {
         console.log("ssssssssssssssss");
       }
-    }
+    },
   },
   methods: {
     toggleMenu() {
       this.$emit("toggleMenu");
     },
     async fetchUserName() {
-      if (
-        this.$store.state.userToken !== null &&
-        this.$store.state.myCompanyToken !== null &&
-        this.$store.state.authorityId !== null &&
-        this.$route.path == "/companies"
-      ) {
+      if (this.$route.path == "/companies") {
         try {
           const response = await api().get("/users/listing");
           this.userName = response.data.data.fullname;
         } catch (error) {
           console.error("Kullanıcı adı alınamadı:", error);
         }
-      } else {
-        console.log("Gerekli oturum bilgileri eksik.");
-      }
+        } else {
+          console.log("Gerekli oturum bilgileri eksik.");
+        }
     },
   },
 };

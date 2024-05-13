@@ -184,7 +184,7 @@ export default {
         ) {
           console.log("WWWWWWWWWWWWWWWWWW", this.$store.state.authorityId);
           try {
-            console.log("Silinen Kullanıcı ID: ", this.users[user[0]].id);
+            console.log("Silinen Kullanıcı: ", this.users[user[0]].id);
             this.getUsers();
             this.$swal("Başarılı", "Kullanıcı başarıyla silindi", "success");
           } catch (error) {
